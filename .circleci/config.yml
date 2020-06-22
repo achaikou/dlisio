@@ -247,7 +247,7 @@ jobs:
                   -DLFP_FMT_HEADER_ONLY=ON `
                   -DBUILD_TESTING=OFF `
                   -DCMAKE_BUILD_TYPE=Release `
-                  -DCMAKE_TOOLCHAIN_FILE=./../../vckpg/scripts/buildsystems/vcpkg.cmake ..
+                  -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
             cmake --build . --target install
             #set install-dir=C:/Program Files
             #set lfp_DIR=%install-dir%/layered-file-protocols/share/lfp/cmake
