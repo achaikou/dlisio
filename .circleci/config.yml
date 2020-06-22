@@ -216,6 +216,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: check architecture
+          command |
+            set pro
+            wmic os get osarchitecture
+      - run:
           name: install vcpkg
           command: |
             git clone https://github.com/Microsoft/vcpkg.git
