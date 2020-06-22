@@ -217,7 +217,7 @@ jobs:
       - checkout
       - run:
           name: check architecture
-          command |
+          command: |
             set pro
             wmic os get osarchitecture
       - run:
