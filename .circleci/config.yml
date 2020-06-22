@@ -282,6 +282,6 @@ workflows:
 #       - python-36
 #       - python-37
 #       - python-38
-    windows:
-      jobs:
-        - python-win
+  windows:
+    jobs:
+      - python-win
