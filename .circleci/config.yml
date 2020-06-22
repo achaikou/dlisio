@@ -238,6 +238,7 @@ jobs:
             git clone https://github.com/equinor/layered-file-protocols.git
             mkdir layered-file-protocols/build
             cd layered-file-protocols/build
+            C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat
             cmake -DBUILD_SHARED_LIBS=ON
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc"
                   -DLFP_FMT_HEADER_ONLY=ON
