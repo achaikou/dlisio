@@ -258,11 +258,12 @@ jobs:
           command: |
             mkdir build
             cd build
-            cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc"
-                  -DCMAKE_BUILD_TYPE=Release
-                  -DBUILD_TESTING=OFF ..
-            cmake --build .
-            ctest --output-on-failure
+            cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
+                  -DCMAKE_BUILD_TYPE=Release `
+                  -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+                  -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+            cmake --build . --target install --config Release
+            ctest --build-config Release --output-on-failure
             sudo make install
       - run:
           name: install python dependencies
