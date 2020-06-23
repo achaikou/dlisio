@@ -231,7 +231,7 @@ jobs:
           name: install fmtlib
           command: |
             cd vcpkg
-            .\vcpkg install fmt
+            .\vcpkg install fmt:x64-windows
       - run:
           name: install layered-file-protocol
           command: |
