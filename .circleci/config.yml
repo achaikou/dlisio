@@ -251,10 +251,7 @@ jobs:
             cmake --build . --config Release --target install
             #set install-dir=C:/Program Files
             #set lfp_DIR=%install-dir%/layered-file-protocols/share/lfp/cmake
-            ls "C:/Program Files/"
-            ls "C:/Program Files/layered-file-protocols"
-            ls "C:/Program Files/layered-file-protocols/share/"
-            ls "C:/Program Files/layered-file-protocols/share/lfp/"
+            ls "C:/Program Files (x86)"
             
       - pull_submodules
       - run:
@@ -262,7 +259,7 @@ jobs:
           #environment:
             #lfp_DIR: C:/Program Files/layered-file-protocols/share/lfp/cmake
           command: |
-            $env:lfp_DIR = "C:/Program Files/layered-file-protocols/share/lfp/cmake"
+            $env:lfp_DIR = "C:/Program Files (x86)/layered-file-protocols/share/lfp/cmake"
             echo "lets check if lfp_DIR set: $lfp_DIR"
             echo "lets check if lfp_DIR set2: $env:lfp_DIR"
             Write-Host "TAG: $env:lfp_DIR"
