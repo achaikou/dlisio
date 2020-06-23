@@ -254,9 +254,10 @@ jobs:
       - pull_submodules
       - run:
           name: install core
-          environment:
-            lfp_DIR: C:/Program Files/layered-file-protocols/share/lfp/cmake
+          #environment:
+            #lfp_DIR: C:/Program Files/layered-file-protocols/share/lfp/cmake
           command: |
+            set lfp_DIR=C:/Program Files/layered-file-protocols/share/lfp/cmake
             echo "lets check if lfp_DIR set: $lfp_DIR"
             mkdir build
             cd build
