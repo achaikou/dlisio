@@ -248,17 +248,24 @@ jobs:
                   -DBUILD_TESTING=OFF `
                   -DCMAKE_BUILD_TYPE=Release `
                   -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
-            cmake --build . --target install
+            cmake --build . --config Release --target install
             #set install-dir=C:/Program Files
             #set lfp_DIR=%install-dir%/layered-file-protocols/share/lfp/cmake
+            ls "C:/Program Files/"
+            ls "C:/Program Files/layered-file-protocols"
+            ls "C:/Program Files/layered-file-protocols/share/"
+            ls "C:/Program Files/layered-file-protocols/share/lfp/"
+            
       - pull_submodules
       - run:
           name: install core
           #environment:
             #lfp_DIR: C:/Program Files/layered-file-protocols/share/lfp/cmake
           command: |
-            $Env:lfp_DIR = "C:/Program Files/layered-file-protocols/share/lfp/cmake"
+            $env:lfp_DIR = "C:/Program Files/layered-file-protocols/share/lfp/cmake"
             echo "lets check if lfp_DIR set: $lfp_DIR"
+            echo "lets check if lfp_DIR set2: $env:lfp_DIR"
+            Write-Host "TAG: $env:lfp_DIR"
             mkdir build
             cd build
             cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
