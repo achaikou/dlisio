@@ -263,7 +263,7 @@ jobs:
                   -DVCPKG_TARGET_TRIPLET=x64-windows-static `
                   -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
             cmake --build . --target install --config Release
-            ctest --build-config Release --output-on-failure
+            #ctest --build-config Release --output-on-failure
       - run:
           name: install python dependencies
           command: python -m pip install --user -r python/requirements-dev.txt
@@ -272,6 +272,7 @@ jobs:
           command: |
             cd python
             python setup.py build_ext --inplace install --user test
+            #python setup.py bdist_wheel
 
 workflows:
   version: 2
