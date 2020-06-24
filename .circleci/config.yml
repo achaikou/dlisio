@@ -214,6 +214,10 @@ jobs:
       name: win/default
       shell: powershell.exe
     steps:
+      - run:
+          name: global git newline fix
+          command: |
+            git config --global core.autocrlf false
       - checkout
       - run:
           name: check architecture
