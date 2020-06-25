@@ -119,6 +119,86 @@ commands:
             cd build
             ctest --output-on-failure
 
+  windows_build:
+    description: building on windows
+    parameters:
+      python_version:
+        description: python version
+        type: string
+      arch:
+        description: x86 or x64
+        type: enum
+        enum: ["x86", "x64"]
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - run:
+          name: Explicitly disable autocrlf
+          # if not executed, our binary files  will be changed
+          command: |
+            git config --global core.autocrlf false
+      - checkout
+      - run:
+          name: install vcpkg
+          command: |
+            git clone https://github.com/Microsoft/vcpkg.git
+            cd vcpkg
+            .\bootstrap-vcpkg.bat
+            .\vcpkg integrate install
+      - run:
+          name: install cmake
+          command: |
+            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
+            refreshenv
+      - run:
+          name: install python
+          command: |
+            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"
+            refreshenv
+      - run:
+          name: install fmtlib
+          command: |
+            cd vcpkg
+            .\vcpkg install fmt:<< parameters.arch >>-windows
+      - run:
+          name: install layered-file-protocol
+          command: |
+            git clone https://github.com/equinor/layered-file-protocols.git
+            mkdir layered-file-protocols/build
+            cd layered-file-protocols/build
+            cmake -DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows-static `
+                  -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
+                  -DLFP_FMT_HEADER_ONLY=ON `
+                  -DBUILD_TESTING=OFF `
+                  -DCMAKE_BUILD_TYPE=Release `
+                  -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+            cmake --build . --config Release --target install     
+      - pull_submodules
+      - run:
+          name: install python dependencies
+          command: python -m pip install --user -r python/requirements-dev.txt
+      - run:
+          name: install core
+          environment:
+            lfp_DIR: "C:/Program Files (x86)/layered-file-protocols/share/lfp/cmake"
+          command: |
+            #$env:lfp_DIR = "C:/Program Files (x86)/layered-file-protocols/share/lfp/cmake"
+            echo "lets check if lfp_DIR set2: $env:lfp_DIR"
+            mkdir build
+            cd build
+            cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
+                  -DCMAKE_BUILD_TYPE=Release `
+                  -DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows-static `
+                  -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+            cmake --build . --target install --config Release
+      - run:
+          name: build python
+          command: |
+            cd python
+            #python setup.py build_ext --inplace install --user test -G "Visual Studio 16 2019"
+            python setup.py bdist_wheel
+            
 jobs:
   gcc:
     docker:
@@ -214,76 +294,9 @@ jobs:
       name: win/default
       shell: powershell.exe
     steps:
-      - run:
-          name: global git newline fix
-          command: |
-            git config --global core.autocrlf false
-      - checkout
-      - run:
-          name: check architecture
-          command: |
-            set pro
-            wmic os get osarchitecture
-      - run:
-          name: install vcpkg
-          command: |
-            git clone https://github.com/Microsoft/vcpkg.git
-            cd vcpkg
-            .\bootstrap-vcpkg.bat
-            .\vcpkg integrate install
-      - run:
-          name: install fmtlib
-          command: |
-            cd vcpkg
-            .\vcpkg install fmt:x64-windows-static
-      - run:
-          name: install layered-file-protocol
-          command: |
-            #& "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
-            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
-            refreshenv
-            cmake --version
-            git clone https://github.com/equinor/layered-file-protocols.git
-            mkdir layered-file-protocols/build
-            cd layered-file-protocols/build
-            cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static `
-                  -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
-                  -DLFP_FMT_HEADER_ONLY=ON `
-                  -DBUILD_TESTING=OFF `
-                  -DCMAKE_BUILD_TYPE=Release `
-                  -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
-            cmake --build . --config Release --target install
-            #set install-dir=C:/Program Files
-            #set lfp_DIR=%install-dir%/layered-file-protocols/share/lfp/cmake
-            #ls "C:/Program Files (x86)"
-            
-      - pull_submodules
-      - run:
-          name: install python dependencies
-          command: python -m pip install --user -r python/requirements-dev.txt
-      - run:
-          name: install core
-          #environment:
-            #lfp_DIR: C:/Program Files/layered-file-protocols/share/lfp/cmake
-          command: |
-            $env:lfp_DIR = "C:/Program Files (x86)/layered-file-protocols/share/lfp/cmake"
-            echo "lets check if lfp_DIR set: $lfp_DIR"
-            echo "lets check if lfp_DIR set2: $env:lfp_DIR"
-            Write-Host "TAG: $env:lfp_DIR"
-            mkdir build
-            cd build
-            cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
-                  -DCMAKE_BUILD_TYPE=Release `
-                  -DVCPKG_TARGET_TRIPLET=x64-windows-static `
-                  -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
-            cmake --build . --target install --config Release
-            #ctest --build-config Release --output-on-failure
-      - run:
-          name: build python
-          command: |
-            cd python
-            python setup.py build_ext --inplace install --user test -G "Visual Studio 16 2019"
-            #python setup.py bdist_wheel
+      - windows_build:
+          python_version: "3.5"
+          arch: "x86"
 
 workflows:
   version: 2
