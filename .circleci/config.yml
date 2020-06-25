@@ -153,6 +153,8 @@ commands:
           command: |
             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"
             refreshenv
+            python --version
+            python -m pip install --upgrade pip
       - run:
           name: install fmtlib
           command: |
