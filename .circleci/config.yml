@@ -296,7 +296,7 @@ jobs:
     steps:
       - windows_build:
           python_version: "3.5"
-          arch: "x86"
+          arch: "x64"
 
 workflows:
   version: 2
