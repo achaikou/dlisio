@@ -153,8 +153,10 @@ commands:
           command: |
             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"
             refreshenv
-            python --version
             python -m pip install --upgrade pip
+            pip install --upgrade setuptools
+            pip install --upgrade certifi
+            refreshenv
       - run:
           name: install fmtlib
           command: |
@@ -178,7 +180,9 @@ commands:
       - pull_submodules
       - run:
           name: install python dependencies
-          command: python -m pip install --user -r python/requirements-dev.txt
+          command: |
+            python -m pip install --user -r python/requirements-dev.txt
+            refreshenv
       - run:
           name: install core
           environment:
