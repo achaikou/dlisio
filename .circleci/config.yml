@@ -292,8 +292,8 @@ jobs:
       shell: powershell.exe
     steps:
       - windows_build:
-          python_version: 3.5
-          arch: x86
+          python_version: "3.5"
+          arch: "x86"
 
 workflows:
   version: 2
