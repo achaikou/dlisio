@@ -129,9 +129,6 @@ commands:
         description: x86 or x64
         type: enum
         enum: ["x86", "x64"]
-    executor:
-      name: win/default
-      shell: powershell.exe
     steps:
       - run:
           name: Explicitly disable autocrlf
@@ -198,7 +195,7 @@ commands:
             cd python
             #python setup.py build_ext --inplace install --user test -G "Visual Studio 16 2019"
             python setup.py bdist_wheel
-            
+
 jobs:
   gcc:
     docker:
@@ -295,8 +292,8 @@ jobs:
       shell: powershell.exe
     steps:
       - windows_build:
-          python_version: "3.5"
-          arch: "x86"
+          python_version: 3.5
+          arch: x86
 
 workflows:
   version: 2
