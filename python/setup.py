@@ -72,8 +72,7 @@ skbuild.setup(
         # everything not OS X. We depend on C++11, which makes our minimum
         # supported OS X release 10.9
         '-DCMAKE_OSX_DEPLOYMENT_TARGET=10.9',
-        '-DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake',
-        '-DVCPKG_TARGET_TRIPLET=x86-windows',
+        '-A Win32',
     ],
     # skbuild's test imples develop, which is pretty obnoxious instead, use a
     # manually integrated pytest.

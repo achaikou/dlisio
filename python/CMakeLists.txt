@@ -63,8 +63,7 @@ add_custom_target(
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
             -DCMAKE_INSTALL_RPATH=$<TARGET_FILE_DIR:dlisio>
             -DCMAKE_INSTALL_NAME_DIR=$<TARGET_FILE_DIR:dlisio>
-            -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake
-            -DVCPKG_TARGET_TRIPLET=x86-windows
+            -A Win32
 )
 message("after some thing")
 
