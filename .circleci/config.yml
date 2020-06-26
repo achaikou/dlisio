@@ -129,6 +129,8 @@ commands:
         description: x86 or x64
         type: enum
         enum: ["x86", "x64"]
+    environment:
+      VCPKG_DEFAULT_TRIPLET: x86-windows
     steps:
       - run:
           name: Explicitly disable autocrlf
@@ -161,7 +163,8 @@ commands:
           name: install fmtlib
           command: |
             cd vcpkg
-            .\vcpkg install fmt:<< parameters.arch >>-windows
+            .\vcpkg install fmt
+            #.\vcpkg install fmt:<< parameters.arch >>-windows
             #.\vcpkg install fmt:<< parameters.arch >>-windows-static
       - run:
           name: install layered-file-protocol
@@ -170,11 +173,11 @@ commands:
             mkdir layered-file-protocols/build
             cd layered-file-protocols/build
             #-DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows-static `
+            #-DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows `
             cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DLFP_FMT_HEADER_ONLY=ON `
                   -DBUILD_TESTING=OFF `
                   -DCMAKE_BUILD_TYPE=Release `
-                  -DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows `
                   -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
             cmake --build . --config Release --target install     
       - pull_submodules
@@ -193,9 +196,9 @@ commands:
             mkdir build
             cd build
             #-DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows-static `
+            #-DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows `
             cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DCMAKE_BUILD_TYPE=Release `
-                  -DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows `
                   -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake ..
             cmake --build . --target install --config Release
       - run:
@@ -302,7 +305,7 @@ jobs:
     steps:
       - windows_build:
           python_version: "3.5"
-          arch: "x64"
+          arch: "x86"
 
 workflows:
   version: 2
