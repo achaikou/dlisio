@@ -35,6 +35,8 @@ if (CMAKE_BUILD_TYPE)
     )
 endif ()
 
+message("before some thing")
+
 add_custom_target(
     dlisio-python ALL
     COMMENT "Building python library with setup.py"
@@ -61,9 +63,14 @@ add_custom_target(
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
             -DCMAKE_INSTALL_RPATH=$<TARGET_FILE_DIR:dlisio>
             -DCMAKE_INSTALL_NAME_DIR=$<TARGET_FILE_DIR:dlisio>
+            -DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake
+            -DVCPKG_TARGET_TRIPLET=x86-windows
 )
+message("after some thing")
 
 add_dependencies(dlisio-python dlisio dlisio-extension)
+
+message("after the other thing")
 
 install(CODE "
     if (DEFINED ENV{DESTDIR})
