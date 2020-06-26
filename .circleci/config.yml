@@ -201,7 +201,7 @@ commands:
             cmake -G "Visual Studio 16 2019" `
                   -A Win32 `
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
-                  -DCMAKE_BUILD_TYPE=Release `
+                  -DCMAKE_BUILD_TYPE=Release
             cmake --build . --target install --config Release
       - run:
           name: build python
