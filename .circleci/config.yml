@@ -142,7 +142,7 @@ commands:
             git clone https://github.com/Microsoft/vcpkg.git
             cd vcpkg
             .\bootstrap-vcpkg.bat
-            .\vcpkg integrate install
+            #.\vcpkg integrate install
       - run:
           name: install cmake
           command: |
