@@ -152,8 +152,11 @@ commands:
           name: install python
           command: |
             #choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"
-            choco install python3-x86_32 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"
+            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" --forcex86
             refreshenv
+      - run:
+          name: install python packages
+          command: |
             python -m pip install --upgrade pip
             pip install --upgrade setuptools
             pip install --upgrade certifi
