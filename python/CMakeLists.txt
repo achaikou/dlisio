@@ -63,7 +63,6 @@ add_custom_target(
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
             -DCMAKE_INSTALL_RPATH=$<TARGET_FILE_DIR:dlisio>
             -DCMAKE_INSTALL_NAME_DIR=$<TARGET_FILE_DIR:dlisio>
-            -A Win32
 )
 message("after some thing")
 
