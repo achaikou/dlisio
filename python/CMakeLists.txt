@@ -51,7 +51,7 @@ add_custom_target(
         build # setup.py build args
             --cmake-executable ${CMAKE_COMMAND}
             --generator ${CMAKE_GENERATOR}
-            ${DLISIO_PYTHON_BUILD_TYPE}
+            --build-type=Release
         -- # cmake to the extension
             -Ddlisio_DIR=${DLISIO_LIB_BINARY_DIR}
             -Dmpark_DIR=${MPARK_LIB_BINARY_DIR}
@@ -61,7 +61,7 @@ add_custom_target(
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
             -DCMAKE_INSTALL_RPATH=$<TARGET_FILE_DIR:dlisio>
             -DCMAKE_INSTALL_NAME_DIR=$<TARGET_FILE_DIR:dlisio>
-            -A Win32'
+            -DCMAKE_GENERATOR_PLATFORM=x86
 )
 
 add_dependencies(dlisio-python dlisio dlisio-extension)
