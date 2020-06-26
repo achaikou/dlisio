@@ -129,8 +129,6 @@ commands:
         description: x86 or x64
         type: enum
         enum: ["x86", "x64"]
-    environment:
-      VCPKG_DEFAULT_TRIPLET: x86-windows
     steps:
       - run:
           name: Explicitly disable autocrlf
@@ -302,6 +300,8 @@ jobs:
     executor:
       name: win/default
       shell: powershell.exe
+    environment:
+      VCPKG_DEFAULT_TRIPLET: x86-windows
     steps:
       - windows_build:
           python_version: "3.5"
