@@ -203,9 +203,10 @@ commands:
             #-DVCPKG_TARGET_TRIPLET=<< parameters.arch >>-windows `
             #-DCMAKE_TOOLCHAIN_FILE=C:/Users/circleci/project/vcpkg/scripts/buildsystems/vcpkg.cmake
             #-A Win32 `
-            cmake -G "Visual Studio 16 2019 Win32" `
+            cmake -G "Visual Studio 16 2019" `
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DCMAKE_BUILD_TYPE=Release `
+                  -A Win32 `
                   ..
             cmake --build . --target install --config Release
       - run:
