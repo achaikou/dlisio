@@ -151,7 +151,7 @@ commands:
           name: install python
           command: |
             $options = ''
-            if(<< parameters.arch >> -eq 'x86') {
+            if('<< parameters.arch >>' -eq 'x86') {
               $options = '--forcex86'
             }
             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" $options
@@ -195,7 +195,7 @@ commands:
           command: |
             mkdir build
             cd build
-            if(<< parameters.arch >> -eq 'x86') {
+            if('<< parameters.arch >>' -eq 'x86') {
               $platform = 'Win32'
             } else {
               $platform = 'Win64'
