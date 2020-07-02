@@ -140,7 +140,7 @@ commands:
       - restore_cache:
           key: vers1-vcpkg
       - restore_cache:
-          key: vers1-<< parameters.python_version >>
+          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
       - run:
           name: install vcpkg #TODO: cache
           command: |
@@ -181,7 +181,7 @@ commands:
           paths:
             C:/Users/circleci/project/vcpkg 
       - save_cache:
-          key: vers1-<< parameters.python_version >>
+          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
           paths:
             C:\ProgramData\chocolatey 
       - run:
@@ -429,7 +429,7 @@ jobs:
             cd deploy
             # everything is defined as CircleCI environemnt variables
             # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
-            twine upload --skip-existing dist/*
+            twine upload -r $TWINE_REPOSITORY -u $TWINE_USERNAME -p $TWINE_PASSWORD --skip-existing dist/*
             
 workflows:
   version: 2
