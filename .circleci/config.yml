@@ -149,7 +149,7 @@ commands:
             refreshenv
       - run:
           name: install python
-           command: |
+          command: |
             $options = ''
             if(<< parameters.arch >> -eq 'x86') {
               $options = '--forcex86'
