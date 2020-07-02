@@ -404,7 +404,8 @@ workflows:
 #       - python-35-win-x86
 #       - python-35-win-x64
 #       - python-36-win-x86
-      - python-36-win-x64:
+#       - python-36-win-x64
+      - python-37-win-x86:
           filters:
             tags:
               only: /.*/

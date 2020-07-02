@@ -49,7 +49,6 @@ pybind_includes = [
 
 skbuild.setup(
     name = 'test-ignore-eqdlis',
-    version="0.0.1",
     description = 'test ignore',
     long_description = 'test ignore',
     url = 'https://github.com/achaikou/dlisio',
