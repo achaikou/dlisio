@@ -130,6 +130,7 @@ commands:
         type: enum
         enum: ["x86", "x64"]
     steps:
+      # CircleCI machine is 64 bit, but in theory this script sets everything explicitly
       - run:
           name: Explicitly disable autocrlf
           # if not executed, our binary files  will be changed
@@ -150,11 +151,11 @@ commands:
       - run:
           name: install python
           command: |
-            $options = ''
+            $choco_options = ''
             if('<< parameters.arch >>' -eq 'x86') {
-              $options = '--forcex86'
+              $choco_options = '--forcex86'
             }
-            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" $options
+            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" $choco_options
             refreshenv
       - run:
           name: install python packages
@@ -177,7 +178,7 @@ commands:
             if('<< parameters.arch >>' -eq 'x86') {
               $platform = 'Win32'
             } else {
-              $platform = 'Win64'
+              $platform = 'x64'
             }
             cmake -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DLFP_FMT_HEADER_ONLY=ON `
@@ -203,7 +204,7 @@ commands:
             if('<< parameters.arch >>' -eq 'x86') {
               $platform = 'Win32'
             } else {
-              $platform = 'Win64'
+              $platform = 'x64'
             }
             cmake -G "Visual Studio 16 2019" `
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
@@ -327,12 +328,21 @@ jobs:
       - windows_build:
           python_version: "3.5"
           arch: "x64"
+
+  python-36-win-x86:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.6"
+          arch: "x86"
           
 workflows:
   version: 2
-  build:
-    jobs:
-      - gcc
+#   build:
+#     jobs:
+#       - gcc
 #       - clang
 #       - debug
 # 
@@ -350,3 +360,4 @@ workflows:
   windows:
     jobs:
       - python-35-win-x64
+      - python-36-win-x86
