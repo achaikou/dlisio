@@ -151,13 +151,14 @@ commands:
       - run:
           name: install python
           command: |
-            $ErrorActionPreference = "Stop"
             $choco_options = ''
             if('<< parameters.arch >>' -eq 'x86') {
               $choco_options = '--forcex86'
             }
-            choco uninstall python3 -x
             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" $choco_options
+      - run:
+          name: refreshevn in separate step
+          command: |
             refreshenv
       - run:
           name: install python packages
@@ -362,6 +363,24 @@ jobs:
       - windows_build:
           python_version: "3.7"
           arch: "x86"
+
+  python-37-win-x64:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.7"
+          arch: "x64"
+
+  python-38-win-x86:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.8"
+          arch: "x86"
           
   deploy-fake:
     docker:
@@ -416,13 +435,15 @@ workflows:
 #       - python-35-win-x64
 #       - python-36-win-x86
 #       - python-36-win-x64
-      - python-37-win-x86:
+#       - python-37-win-x86 #issue
+#       - python-37-win-x64 #issue
+      - python-38-win-x86
           filters:
             tags:
               only: /.*/
       - deploy-fake:
           requires:
-            - python-37-win-x86
+            - python-38-win-x86
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -430,7 +451,7 @@ workflows:
               ignore: /.*/
       - deploy-to-test:
           requires:
-            - python-37-win-x86
+            - python-38-win-x86
           filters:
             tags:
               only: /.*/
