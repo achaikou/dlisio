@@ -35,8 +35,6 @@ if (CMAKE_BUILD_TYPE)
     )
 endif ()
 
-message("this is the value of generator platform ${CMAKE_GENERATOR_PLATFORM}")
-
 add_custom_target(
     dlisio-python ALL
     COMMENT "Building python library with setup.py"
@@ -63,8 +61,7 @@ add_custom_target(
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
             -DCMAKE_INSTALL_RPATH=$<TARGET_FILE_DIR:dlisio>
             -DCMAKE_INSTALL_NAME_DIR=$<TARGET_FILE_DIR:dlisio>
-            -A Win32
-           # -DCMAKE_GENERATOR_PLATFORM=x86
+            -A ${CMAKE_GENERATOR_PLATFORM}
 )
 
 add_dependencies(dlisio-python dlisio dlisio-extension)
