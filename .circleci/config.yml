@@ -430,14 +430,6 @@ jobs:
             # everything is defined as CircleCI environemnt variables
             # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
             twine upload -r $TWINE_REPOSITORY -u $TWINE_USERNAME -p $TWINE_PASSWORD --skip-existing dist/*
-
-  env_variables:
-    docker:
-      - image: debian:stable
-    steps:
-      - run:
-          name: "Print an env var stored in the Project"
-          command: echo $TWINE_REPOSITORY
             
 workflows:
   version: 2
@@ -466,7 +458,7 @@ workflows:
 #       - python-36-win-x86
 #       - python-36-win-x64
 #       - python-37-win-x86 #issue
-#       - python-37-win-x64 #issue?
+      - python-37-win-x64 #issue?
 #       - python-38-win-x86
 #       - python-38-win-x64:
 #           filters:
