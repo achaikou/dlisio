@@ -35,6 +35,14 @@ if (CMAKE_BUILD_TYPE)
     )
 endif ()
 
+if (CMAKE_VS_PLATFORM_NAME)
+    # set platform name string if build on VS
+    set(DLISIO_VS_PLATFORM
+        -A ${CMAKE_GENERATOR_PLATFORM}
+        CACHE STRING "platform name option for VS generators"
+    )
+endif ()
+
 add_custom_target(
     dlisio-python ALL
     COMMENT "Building python library with setup.py"
@@ -61,11 +69,12 @@ add_custom_target(
             -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
             -DCMAKE_INSTALL_RPATH=$<TARGET_FILE_DIR:dlisio>
             -DCMAKE_INSTALL_NAME_DIR=$<TARGET_FILE_DIR:dlisio>
-            -A ${CMAKE_GENERATOR_PLATFORM}
+            ${DLISIO_VS_PLATFORM}
 )
 
 add_dependencies(dlisio-python dlisio dlisio-extension)
 
+#should the same be passed here in install?
 install(CODE "
     if (DEFINED ENV{DESTDIR})
         get_filename_component(abs-destdir \"\$ENV{DESTDIR}\" ABSOLUTE)
@@ -86,8 +95,6 @@ install(CODE "
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )"
 )
-
-message("after the install thing")
 
 option(BUILD_PYDOC "Build python documentation" OFF)
 
