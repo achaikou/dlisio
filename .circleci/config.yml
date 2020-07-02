@@ -151,10 +151,12 @@ commands:
       - run:
           name: install python
           command: |
+            $ErrorActionPreference = "Stop"
             $choco_options = ''
             if('<< parameters.arch >>' -eq 'x86') {
               $choco_options = '--forcex86'
             }
+            choco uninstall python3 -x
             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" $choco_options
             refreshenv
       - run:
