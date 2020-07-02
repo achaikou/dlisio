@@ -351,6 +351,15 @@ jobs:
       - windows_build:
           python_version: "3.6"
           arch: "x64"
+
+  python-37-win-x86:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.7"
+          arch: "x86"
           
   deploy-fake:
     docker:
@@ -411,7 +420,7 @@ workflows:
               only: /.*/
       - deploy-fake:
           requires:
-            - python-36-win-x64
+            - python-37-win-x86
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -419,7 +428,7 @@ workflows:
               ignore: /.*/
       - deploy-to-test:
           requires:
-            - python-36-win-x64
+            - python-37-win-x86
           filters:
             tags:
               only: /.*/
