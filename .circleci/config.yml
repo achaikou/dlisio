@@ -218,8 +218,13 @@ commands:
             cd python
             python setup.py bdist_wheel -G "Visual Studio 16 2019"
 
-      - store_artifacts:
-          path: C:/Users/circleci/project/python/dist
+      #- store_artifacts:
+      #    path: C:/Users/circleci/project/python/dist
+
+      - persist_to_workspace:
+          root: C:/Users/circleci/project/python
+          paths:
+            - dist/*
 
 jobs:
   gcc:
@@ -337,7 +342,44 @@ jobs:
       - windows_build:
           python_version: "3.6"
           arch: "x86"
+
+  python-36-win-x64:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.6"
+          arch: "x64"
           
+  deploy-fake:
+    docker:
+      - image: debian:stable
+    steps:
+      - checkout
+      - run:
+          name: deploy step not exected to be called
+          command: |
+            i said you are not expected to be called
+
+  deploy-to-test:
+    docker:
+      - image: debian:stable
+    steps:
+      - run:
+          name: intall twine
+          command: |
+             pip install twine
+      - attach_workspace:
+          at: deploy            
+      - run:
+          name: deploy
+          command: |
+            cd deploy
+            # everything is defined as CircleCI environemnt variables
+            # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
+            twine upload --skip-existing dist/*
+            
 workflows:
   version: 2
 #   build:
@@ -359,5 +401,24 @@ workflows:
 #       - python-38
   windows:
     jobs:
-      - python-35-win-x64
-      - python-36-win-x86
+#       - python-35-win-x86
+#       - python-35-win-x64
+#       - python-36-win-x86
+      - python-36-win-x64:
+          filters:
+            tags:
+              only: /.*/
+      - deploy-fake:
+          requires:
+            - python-36-win-x64
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+      - deploy-to-test:
+          requires:
+            - python-36-win-x64
+          filters:
+            tags:
+              only: /.*/
