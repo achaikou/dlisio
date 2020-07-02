@@ -305,7 +305,7 @@ jobs:
       - python_build:
           docs: "-DBUILD_DOC=ON -DSPHINX_ARGS=-WT"
 
-  python-win: #how do I check if that was build statically or not?
+  python-35-win-x86:
     executor:
       name: win/default
       shell: powershell.exe
@@ -314,11 +314,20 @@ jobs:
           python_version: "3.5"
           arch: "x86"
 
+  python-35-win-x64:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.5"
+          arch: "x64"
+          
 workflows:
   version: 2
-#   build:
-#     jobs:
-#       - gcc
+  build:
+    jobs:
+      - gcc
 #       - clang
 #       - debug
 # 
@@ -335,4 +344,4 @@ workflows:
 #       - python-38
   windows:
     jobs:
-      - python-win
+      - python-35-win-x64
