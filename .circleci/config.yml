@@ -137,19 +137,23 @@ commands:
           command: |
             git config --global core.autocrlf false
       - checkout
+      - restore_cache:
+          key: vers1-vcpkg
+      - restore_cache:
+          key: vers1-<< parameters.python_version >>
       - run:
-          name: install vcpkg
+          name: install vcpkg #TODO: cache
           command: |
             git clone https://github.com/Microsoft/vcpkg.git
             cd vcpkg
             .\bootstrap-vcpkg.bat
       - run:
-          name: install cmake
+          name: install cmake #TODO: cache
           command: |
             choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
             refreshenv
       - run:
-          name: install python
+          name: install python #TODO: cache, but per version
           command: |
             $choco_options = ''
             if('<< parameters.arch >>' -eq 'x86') {
@@ -161,17 +165,25 @@ commands:
           command: |
             refreshenv
       - run:
-          name: install python packages
+          name: install python packages #TODO: cache per version?
           command: |
             python -m pip install --upgrade pip
             pip install --upgrade setuptools
             pip install --upgrade certifi
             refreshenv
       - run:
-          name: install fmtlib
+          name: install fmtlib #TODO: cache with vcpkg
           command: |
             cd vcpkg
             .\vcpkg install fmt:<< parameters.arch >>-windows
+      - save_cache:
+          key: vers1-vcpkg
+          paths:
+            C:/Users/circleci/project/vcpkg 
+      - save_cache:
+          key: vers1-<< parameters.python_version >>
+          paths:
+            C:\ProgramData\chocolatey 
       - run:
           name: install layered-file-protocol
           command: |
@@ -381,6 +393,15 @@ jobs:
       - windows_build:
           python_version: "3.8"
           arch: "x86"
+
+  python-38-win-x64:
+    executor:
+      name: win/default
+      shell: powershell.exe
+    steps:
+      - windows_build:
+          python_version: "3.8"
+          arch: "x64"
           
   deploy-fake:
     docker:
@@ -394,7 +415,7 @@ jobs:
 
   deploy-to-test:
     docker:
-      - image: debian:stable
+      - image: circleci/python:3.7
     steps:
       - run:
           name: intall twine
@@ -436,14 +457,15 @@ workflows:
 #       - python-36-win-x86
 #       - python-36-win-x64
 #       - python-37-win-x86 #issue
-#       - python-37-win-x64 #issue
-      - python-38-win-x86:
+#       - python-37-win-x64 #issue?
+#       - python-38-win-x86
+      - python-38-win-x64:
           filters:
             tags:
               only: /.*/
       - deploy-fake:
           requires:
-            - python-38-win-x86
+            - python-38-win-x64
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
@@ -451,7 +473,7 @@ workflows:
               ignore: /.*/
       - deploy-to-test:
           requires:
-            - python-38-win-x86
+            - python-38-win-x64
           filters:
             tags:
               only: /.*/
