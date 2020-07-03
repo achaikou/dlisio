@@ -464,22 +464,16 @@ workflows:
 #       - python-36-win-x64
 #       - python-37-win-x86 #issue
 #       - python-37-win-x64 #issue?
-      - python-38-win-x86
+      - python-38-win-x86:
 #       - python-38-win-x64:
 #           filters:
 #             tags:
 #               only: /.*/
-#       - deploy-fake:
-#           requires:
-#             - python-38-win-x64
-#           filters:
-#             tags:
-#               only: /[0-9]+(\.[0-9]+)*/
-#             branches:
-#               ignore: /.*/
-#       - deploy-to-test:
-#           requires:
-#             - python-38-win-x64
-#           filters:
-#             tags:
-#               only: /.*/
+      - deploy-to-test:
+          requires:
+            - python-38-win-x86
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
