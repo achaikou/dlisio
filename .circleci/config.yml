@@ -137,50 +137,44 @@ commands:
           command: |
             git config --global core.autocrlf false
       - checkout
-      - restore_cache:
-          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
+#       - restore_cache:
+#           key: vers1-<< parameters.python_version >>-<< parameters.arch >>
+#       - run:
+#           name: get packages list
+#           command: |
+#             Get-Package
+#       - run:
+#           name: install python #TODO: cache, but per version
+#           command: |
+#             $choco_options = ''
+#             if('<< parameters.arch >>' -eq 'x86') {
+#               $choco_options = '--forcex86'
+#             }
+#             #choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
+#             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments '"/l*v c:\python3_msi_install.log"'
+#             refreshenv # to remove
+#       - run:
+#           name: refreshevn in separate step
+#           command: |
+#             refreshenv
+#       - run:
+#           name: install python #TODO: cache, but per version
+#           command: |
+#             $choco_options = ''
+#             if('<< parameters.arch >>' -eq 'x86') {
+#               $choco_options = '--forcex86'
+#             }
+#             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
       - run:
-          name: get packages list
+          name: activate correct version with miniconda?
           command: |
-            Get-Package
-      - run:
-          name: install python #TODO: cache, but per version
-          command: |
-            $choco_options = ''
-            if('<< parameters.arch >>' -eq 'x86') {
-              $choco_options = '--forcex86'
-            }
-            #choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
-            choco install python3 --version=<< parameters.python_version >> --install-arguments '"/l*v c:\python3_msi_install.log"'
-            refreshenv # to remove
-      - run:
-          name: refreshevn in separate step
-          command: |
-            refreshenv
-      - run:
-          name: attempt to uninstall miniconda
-          command: |
-            $app = Get-WmiObject -Class Win32_Product `
-                     -Filter "Name = 'Python'"
-            $app.Uninstall()
-      - run:
-          name: show the contents
-          command: |
-            refreshenv
-            ls C:\tools
-            ls C:\tools\miniconda3
-            refreshenv
-      - run:
-          name: install python #TODO: cache, but per version
-          command: |
-            $choco_options = ''
-            if('<< parameters.arch >>' -eq 'x86') {
-              $choco_options = '--forcex86'
-            }
-            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
+            $Env:CONDA_FORCE_32BIT = 1
+            conda create -n py38_32 python=3.8
+            activate py38_32
       - run:
           name: install python packages #TODO: cache per version?
           command: |
+            echo "lets check if variable still fits: $env:CONDA_FORCE_32BIT"
             python -m pip install --upgrade pip
             pip install --upgrade setuptools
             pip install --upgrade certifi
@@ -190,10 +184,10 @@ commands:
           command: |
             choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
             refreshenv
-      - save_cache:
-          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
-          paths:
-            C:\ProgramData\chocolatey
+#       - save_cache:
+#           key: vers1-<< parameters.python_version >>-<< parameters.arch >>
+#           paths:
+#             C:\ProgramData\chocolatey
       - restore_cache:
           key: vers1-vcpkg
       - run:
@@ -482,8 +476,8 @@ workflows:
 #       - python-36-win-x86
 #       - python-36-win-x64
 #       - python-37-win-x86 #issue
-      - python-37-win-x64 #issue?
-#       - python-38-win-x86
+#       - python-37-win-x64 #issue?
+      - python-38-win-x86
 #       - python-38-win-x64:
 #           filters:
 #             tags:
