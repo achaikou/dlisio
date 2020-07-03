@@ -137,8 +137,8 @@ commands:
           command: |
             git config --global core.autocrlf false
       - checkout
-#       - restore_cache:
-#           key: vers1-<< parameters.python_version >>-<< parameters.arch >>
+      - restore_cache:
+          key: vers1-conda-<< parameters.python_version >>-<< parameters.arch >>
 #       - run:
 #           name: get packages list
 #           command: |
@@ -166,31 +166,34 @@ commands:
 #             }
 #             choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
       - run:
-          name: activate correct version with miniconda?
+          name: create correct version with miniconda
           command: |
             conda init powershell
-            $Env:CONDA_FORCE_32BIT = 1
-            conda create -y -n py38_32 python=3.8
-      - run:
-          name: install python packages #TODO: cache per version?
-          command: |
-            python --version
-            conda activate py38_32
-            python --version
-            python -c "import struct;print(struct.calcsize('P') * 8)"
-            python -m pip install --upgrade pip
-            python -m pip install --upgrade setuptools
-            python -m pip install --upgrade certifi
-            refreshenv
+            if('<< parameters.arch >>' -eq 'x86') {
+              $Env:CONDA_FORCE_32BIT = 1
+            }
+            conda create -y -n py-<< parameters.python_version >>-<< parameters.arch >> python=<< parameters.python_version >>
+#       - run:
+#           name: install python packages #TODO: cache per version?
+#           command: |
+#             conda activate py-<< parameters.python_version >>-<< parameters.arch >>
+#             python -m pip install --upgrade pip
+#             python -m pip install --upgrade setuptools
+#             python -m pip install --upgrade certifi
+#             refreshenv
+      - restore_cache:
+          key: vers1-cmake
       - run:
           name: install cmake #TODO: cache
           command: |
-            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
+            if (!(Test-Path "C:\Program Files\CMake")){
+                choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
+            }
             refreshenv
-#       - save_cache:
-#           key: vers1-<< parameters.python_version >>-<< parameters.arch >>
-#           paths:
-#             C:\ProgramData\chocolatey
+      - save_cache:
+          key: vers1-cmake
+          paths:
+            C:\Program Files\CMake
       - restore_cache:
           key: vers1-vcpkg-<< parameters.arch >>
       - run:
@@ -229,12 +232,17 @@ commands:
       - run:
           name: install python dependencies
           command: |
-            python --version
-            conda activate py38_32
-            python --version
-            python -c "import struct;print(struct.calcsize('P') * 8)"
+            conda activate py-<< parameters.python_version >>-<< parameters.arch >>
+            python -m pip install --upgrade pip
+            python -m pip install --upgrade setuptools
+            #python -m pip install --upgrade certifi
+            refreshenv
             python -m pip install --user -r python/requirements-dev.txt
             refreshenv
+      - save_cache:
+          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
+          paths:
+            C:\tools\miniconda3
       - run:
           name: install core
           environment:
@@ -242,15 +250,15 @@ commands:
           command: |
             mkdir build
             cd build
+            conda activate py-<< parameters.python_version >>-<< parameters.arch >>
+            $pversion = python --version
+            $pmode = python -c "import struct;print(struct.calcsize('P') * 8)"
+            echo "active python is $pversion executing in $pmode -bit mode"
             if('<< parameters.arch >>' -eq 'x86') {
               $platform = 'Win32'
             } else {
               $platform = 'x64'
             }
-            python --version
-            conda activate py38_32
-            python --version
-            python -c "import struct;print(struct.calcsize('P') * 8)"
             cmake -G "Visual Studio 16 2019" `
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DCMAKE_BUILD_TYPE=Release `
@@ -260,6 +268,7 @@ commands:
       - run:
           name: build python
           command: |
+            conda activate py-<< parameters.python_version >>-<< parameters.arch >>
             cd python
             python setup.py bdist_wheel -G "Visual Studio 16 2019"
 
@@ -483,7 +492,7 @@ workflows:
   windows:
     jobs:
 #       - python-35-win-x86
-#       - python-35-win-x64
+      - python-35-win-x64
 #       - python-36-win-x86
 #       - python-36-win-x64
 #       - python-37-win-x86 #issue
