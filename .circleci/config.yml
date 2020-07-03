@@ -168,17 +168,19 @@ commands:
       - run:
           name: activate correct version with miniconda?
           command: |
+            conda init powershell
             $Env:CONDA_FORCE_32BIT = 1
-            conda create -n py38_32 python=3.8
+            conda create -y -n py38_32 python=3.8
       - run:
           name: install python packages #TODO: cache per version?
           command: |
-            $Env:CONDA_FORCE_32BIT = 1
-            echo "lets check if variable still fits: $env:CONDA_FORCE_32BIT"
-            activate py38_32
+            python --version
+            conda activate py38_32
+            python --version
+            python -c "import struct;print(struct.calcsize('P') * 8)"
             python -m pip install --upgrade pip
-            pip install --upgrade setuptools
-            pip install --upgrade certifi
+            python -m pip install --upgrade setuptools
+            python -m pip install --upgrade certifi
             refreshenv
       - run:
           name: install cmake #TODO: cache
@@ -194,7 +196,7 @@ commands:
       - run:
           name: install fmt and vcpkg #TODO: cache
           command: |
-            if(![System.IO.File]::Exists("C:/Users/circleci/project/vcpkg")){
+            if (!(Test-Path "C:/Users/circleci/project/vcpkg")){
                 git clone https://github.com/Microsoft/vcpkg.git
                 cd vcpkg
                 .\bootstrap-vcpkg.bat
@@ -227,6 +229,10 @@ commands:
       - run:
           name: install python dependencies
           command: |
+            python --version
+            conda activate py38_32
+            python --version
+            python -c "import struct;print(struct.calcsize('P') * 8)"
             python -m pip install --user -r python/requirements-dev.txt
             refreshenv
       - run:
@@ -241,9 +247,10 @@ commands:
             } else {
               $platform = 'x64'
             }
-            $Env:CONDA_FORCE_32BIT = 1
-            echo "lets check if variable still fits: $env:CONDA_FORCE_32BIT"
-            activate py38_32
+            python --version
+            conda activate py38_32
+            python --version
+            python -c "import struct;print(struct.calcsize('P') * 8)"
             cmake -G "Visual Studio 16 2019" `
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DCMAKE_BUILD_TYPE=Release `
