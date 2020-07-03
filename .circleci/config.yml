@@ -170,11 +170,12 @@ commands:
           command: |
             $Env:CONDA_FORCE_32BIT = 1
             conda create -n py38_32 python=3.8
-            activate py38_32
       - run:
           name: install python packages #TODO: cache per version?
           command: |
+            $Env:CONDA_FORCE_32BIT = 1
             echo "lets check if variable still fits: $env:CONDA_FORCE_32BIT"
+            activate py38_32
             python -m pip install --upgrade pip
             pip install --upgrade setuptools
             pip install --upgrade certifi
@@ -240,6 +241,9 @@ commands:
             } else {
               $platform = 'x64'
             }
+            $Env:CONDA_FORCE_32BIT = 1
+            echo "lets check if variable still fits: $env:CONDA_FORCE_32BIT"
+            activate py38_32
             cmake -G "Visual Studio 16 2019" `
                   -DCMAKE_CXX_FLAGS="/D_CRT_SECURE_NO_WARNINGS /EHsc" `
                   -DCMAKE_BUILD_TYPE=Release `
