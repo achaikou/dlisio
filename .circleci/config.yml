@@ -477,6 +477,6 @@ workflows:
             - python-38-win-x86
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /^v.*/
             branches:
               ignore: /.*/
