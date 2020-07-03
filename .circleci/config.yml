@@ -149,7 +149,7 @@ commands:
       - save_cache:
           key: vers1-cmake
           paths:
-            C:\Program Files\CMake
+            "C:\Program Files\CMake"
       - restore_cache:
           key: vers1-vcpkg-<< parameters.arch >>
       - run:
@@ -201,11 +201,8 @@ commands:
             conda activate py-<< parameters.python_version >>-<< parameters.arch >>
             python -m pip install --upgrade pip
             python -m pip install --upgrade setuptools
-            #python -m pip install --upgrade certifi
             python --version
             python -m pip install --user -r python/requirements-dev.txt
-            refreshenv
-            python --version
       - save_cache:
           key: vers1-conda-<< parameters.python_version >>-<< parameters.arch >>
           paths:
@@ -218,8 +215,8 @@ commands:
             mkdir build
             cd build
             conda activate py-<< parameters.python_version >>-<< parameters.arch >>
-            $pversion = python --version
-            $pmode = python -c "import struct;print(struct.calcsize('P') * 8)"
+            $pversion = python --version | Out-String
+            $pmode = python -c "import struct;print(struct.calcsize('P') * 8)" | Out-String
             echo "active python is $pversion executing in $pmode -bit mode"
             if('<< parameters.arch >>' -eq 'x86') {
               $platform = 'Win32'
@@ -408,16 +405,6 @@ jobs:
       - windows_build:
           python_version: "3.8"
           arch: "x64"
-          
-  deploy-fake:
-    docker:
-      - image: debian:stable
-    steps:
-      - checkout
-      - run:
-          name: deploy step not exected to be called
-          command: |
-            i said you are not expected to be called
 
   deploy-to-test:
     docker:
@@ -432,18 +419,11 @@ jobs:
       - run:
           name: deploy
           command: |
+            python -m pip install -U pip setuptools twine
             cd deploy
             # everything is defined as CircleCI environemnt variables
             # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
             twine upload -r $TWINE_REPOSITORY -u $TWINE_USERNAME -p $TWINE_PASSWORD --skip-existing dist/*
-
-  env_variables:
-    docker:
-      - image: debian:stable
-    steps:
-      - run:
-          name: "Print an env var stored in the Project"
-          command: echo $TWINE_REPOSITORY
             
 workflows:
   version: 2
@@ -466,7 +446,6 @@ workflows:
 #       - python-38
   windows:
     jobs:
-      - env_variables
 #       - python-35-win-x86
 #       - python-35-win-x64
 #       - python-36-win-x86
