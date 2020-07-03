@@ -146,11 +146,25 @@ commands:
             if('<< parameters.arch >>' -eq 'x86') {
               $choco_options = '--forcex86'
             }
-            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" --install-arguments="'/l*v c:\python3_msi_install.log'" $choco_options
+            #choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
+            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="'/l*v c:\python3_msi_install.log'" $choco_options
+            refreshenv # to remove
       - run:
           name: refreshevn in separate step
           command: |
             refreshenv
+      - run:
+          name: attempt to uninstall miniconda
+          command: |
+            C:\tools\miniconda3\Uninstall-Miniconda3.exe
+      - run:
+          name: install python #TODO: cache, but per version
+          command: |
+            $choco_options = ''
+            if('<< parameters.arch >>' -eq 'x86') {
+              $choco_options = '--forcex86'
+            }
+            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
       - run:
           name: install python packages #TODO: cache per version?
           command: |
