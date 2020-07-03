@@ -140,6 +140,10 @@ commands:
       - restore_cache:
           key: vers1-<< parameters.python_version >>-<< parameters.arch >>
       - run:
+          name: get packages list
+          command: |
+            Get-Package
+      - run:
           name: install python #TODO: cache, but per version
           command: |
             $choco_options = ''
@@ -147,7 +151,7 @@ commands:
               $choco_options = '--forcex86'
             }
             #choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1"  $choco_options
-            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="'/l*v c:\python3_msi_install.log'" $choco_options
+            choco install python3 --version=<< parameters.python_version >> --install-arguments '"/l*v c:\python3_msi_install.log"'
             refreshenv # to remove
       - run:
           name: refreshevn in separate step
@@ -156,7 +160,16 @@ commands:
       - run:
           name: attempt to uninstall miniconda
           command: |
-            C:\tools\miniconda3\Uninstall-Miniconda3.exe
+            $app = Get-WmiObject -Class Win32_Product `
+                     -Filter "Name = 'Python'"
+            $app.Uninstall()
+      - run:
+          name: show the contents
+          command: |
+            refreshenv
+            ls C:\tools
+            ls C:\tools\miniconda3
+            refreshenv
       - run:
           name: install python #TODO: cache, but per version
           command: |
