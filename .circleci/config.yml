@@ -452,7 +452,6 @@ workflows:
 #       - python-38
   windows:
     jobs:
-      - env_variables
 #       - python-35-win-x86
 #       - python-35-win-x64
 #       - python-36-win-x86
