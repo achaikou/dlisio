@@ -149,7 +149,7 @@ commands:
       - save_cache:
           key: vers1-cmake
           paths:
-            "C:\Program Files\CMake"
+            "C:\\Program Files\\CMake"
       - restore_cache:
           key: vers1-vcpkg-<< parameters.arch >>
       - run:
