@@ -465,6 +465,9 @@ workflows:
 #       - python-37-win-x86 #issue
 #       - python-37-win-x64 #issue?
       - python-38-win-x86:
+          filters:
+            tags:
+              only: /.*/
 #       - python-38-win-x64:
 #           filters:
 #             tags:
