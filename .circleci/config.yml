@@ -138,7 +138,7 @@ commands:
             git config --global core.autocrlf false
       - checkout
       - restore_cache:
-          key: vers1-cmake
+          key: vers2-cmake
       - run:
           name: install cmake #TODO: cache
           command: |
@@ -147,7 +147,7 @@ commands:
             }
             refreshenv
       - save_cache:
-          key: vers1-cmake
+          key: vers2-cmake
           paths:
             "C:\\Program Files\\CMake"
       - restore_cache:
@@ -186,11 +186,12 @@ commands:
             cmake --build . --config Release --target install     
       - pull_submodules
       - restore_cache:
-          key: vers1-conda-<< parameters.python_version >>-<< parameters.arch >>
+          key: vers2-conda-<< parameters.python_version >>-<< parameters.arch >>
       - run:
           name: create correct version with miniconda
           command: |
             conda init powershell
+            conda env list
             if('<< parameters.arch >>' -eq 'x86') {
               $Env:CONDA_FORCE_32BIT = 1
             }
@@ -204,7 +205,7 @@ commands:
             python --version
             python -m pip install --user -r python/requirements-dev.txt
       - save_cache:
-          key: vers1-conda-<< parameters.python_version >>-<< parameters.arch >>
+          key: vers2-conda-<< parameters.python_version >>-<< parameters.arch >>
           paths:
             C:\tools\miniconda3
       - run:
@@ -419,7 +420,6 @@ jobs:
       - run:
           name: deploy
           command: |
-            python -m pip install -U pip setuptools twine
             cd deploy
             # everything is defined as CircleCI environemnt variables
             # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
