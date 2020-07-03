@@ -138,20 +138,7 @@ commands:
             git config --global core.autocrlf false
       - checkout
       - restore_cache:
-          key: vers1-vcpkg
-      - restore_cache:
           key: vers1-<< parameters.python_version >>-<< parameters.arch >>
-      - run:
-          name: install vcpkg #TODO: cache
-          command: |
-            git clone https://github.com/Microsoft/vcpkg.git
-            cd vcpkg
-            .\bootstrap-vcpkg.bat
-      - run:
-          name: install cmake #TODO: cache
-          command: |
-            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
-            refreshenv
       - run:
           name: install python #TODO: cache, but per version
           command: |
@@ -159,7 +146,7 @@ commands:
             if('<< parameters.arch >>' -eq 'x86') {
               $choco_options = '--forcex86'
             }
-            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" $choco_options
+            choco install python3 --version=<< parameters.python_version >> --no-progress --install-arguments="PrependPath=1" --install-arguments="'/l*v c:\python3_msi_install.log'" $choco_options
       - run:
           name: refreshevn in separate step
           command: |
@@ -172,18 +159,29 @@ commands:
             pip install --upgrade certifi
             refreshenv
       - run:
-          name: install fmtlib #TODO: cache with vcpkg
+          name: install cmake #TODO: cache
           command: |
-            cd vcpkg
-            .\vcpkg install fmt:<< parameters.arch >>-windows
+            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
+            refreshenv
+      - save_cache:
+          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
+          paths:
+            C:\ProgramData\chocolatey
+      - restore_cache:
+          key: vers1-vcpkg
+      - run:
+          name: install fmt and vcpkg #TODO: cache
+          command: |
+            if(![System.IO.File]::Exists("C:/Users/circleci/project/vcpkg")){
+                git clone https://github.com/Microsoft/vcpkg.git
+                cd vcpkg
+                .\bootstrap-vcpkg.bat
+                .\vcpkg install fmt:<< parameters.arch >>-windows
+            }
       - save_cache:
           key: vers1-vcpkg
           paths:
             C:/Users/circleci/project/vcpkg 
-      - save_cache:
-          key: vers1-<< parameters.python_version >>-<< parameters.arch >>
-          paths:
-            C:\ProgramData\chocolatey 
       - run:
           name: install layered-file-protocol
           command: |
