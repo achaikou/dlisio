@@ -192,7 +192,7 @@ commands:
 #           paths:
 #             C:\ProgramData\chocolatey
       - restore_cache:
-          key: vers1-vcpkg
+          key: vers1-vcpkg-<< parameters.arch >>
       - run:
           name: install fmt and vcpkg #TODO: cache
           command: |
@@ -203,7 +203,7 @@ commands:
                 .\vcpkg install fmt:<< parameters.arch >>-windows
             }
       - save_cache:
-          key: vers1-vcpkg
+          key: vers1-vcpkg-<< parameters.arch >>
           paths:
             C:/Users/circleci/project/vcpkg 
       - run:
