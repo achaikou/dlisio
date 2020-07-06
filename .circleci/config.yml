@@ -337,6 +337,15 @@ jobs:
   deploy:
     docker:
       - image: circleci/python:3.7
+    # parameters are not used, here only to create correct build-deployment matrix
+    parameters:
+      python:
+        description: python version
+        type: string
+      platform:
+        description: x86 or x64
+        type: enum
+        enum: ["x86", "x64"]
     steps:
       - run:
           name: install twine
