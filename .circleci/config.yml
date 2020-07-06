@@ -388,7 +388,7 @@ workflows:
           name: build-python-<< matrix.python >>-win-<< matrix.platform >>
           matrix:
             parameters:
-              python: ["3.5", "3.6", "3.7", "3.8"]
+              python: ["3.7"]
               platform: ["x86", "x64"]
           # filters on the "build" jobs are not accidental, CircleCI needs them
           filters:
@@ -398,7 +398,7 @@ workflows:
           name: deploy-python-<< matrix.python >>-win-<< matrix.platform >>
           matrix:
             parameters:
-              python: ["3.5", "3.6", "3.7", "3.8"]
+              python: ["3.7"]
               platform: ["x86", "x64"]
           requires:
             - build-python-<< matrix.python >>-win-<< matrix.platform >>
