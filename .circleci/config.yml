@@ -238,7 +238,8 @@ jobs:
             if (!(Test-Path "C:\Program Files\CMake")){
                 choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
             } else {
-                $env:Path += "C:\Program Files\CMake"
+                [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\CMake", `
+                                                      [EnvironmentVariableTartget::Machine)
             }
             refreshenv
       - save_cache:
@@ -311,8 +312,8 @@ jobs:
             cd build
             conda activate py-<< parameters.python >>-<< parameters.platform >>
             $pversion = (python --version | Out-String).trim()
-            $pmode = python -c "import struct;print(struct.calcsize('P') * 8)" | Out-String
-            echo "active python is $pversion executing in $pmode -bit mode"
+            $pmode = (python -c "import struct;print(struct.calcsize('P') * 8)" | Out-String).trim()
+            echo "active python is $pversion ; executing in $pmode -bit mode"
             if('<< parameters.platform >>' -eq 'x86') {
               $platform = 'Win32'
             } else {
