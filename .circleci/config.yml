@@ -237,6 +237,8 @@ jobs:
           command: |
             if (!(Test-Path "C:\Program Files\CMake")){
                 choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --no-progress
+            } else {
+                $env:Path += "C:\Program Files\CMake"
             }
             refreshenv
       - save_cache:
