@@ -385,7 +385,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-       - deploy:
+      - deploy:
           name: deploy-python-<< matrix.python >>-win-<< matrix.platform >>
           matrix:
             parameters:
