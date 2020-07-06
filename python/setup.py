@@ -48,10 +48,11 @@ pybind_includes = [
 ]
 
 skbuild.setup(
-    name = 'dlisio',
-    description = 'DLIS v1',
-    long_description = 'DLIS v1',
-    url = 'https://github.com/equinor/dlisio',
+    name = 'test-ignore-eqdlis',
+    description = 'test ignore',
+    version = "0.0.23",
+    long_description = 'test ignore',
+    url = 'https://github.com/achaikou/dlisio',
     packages = ['dlisio', 'dlisio.plumbing'],
     license = 'LGPL-3.0',
     platforms = 'any',
@@ -76,5 +77,4 @@ skbuild.setup(
     # skbuild's test imples develop, which is pretty obnoxious instead, use a
     # manually integrated pytest.
     cmdclass = { 'test': setuptools.command.test.test },
-    **getversion()
 )
