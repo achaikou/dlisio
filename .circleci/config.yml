@@ -364,39 +364,39 @@ jobs:
           name: do not run deploy command, but report that it was called
           command: |
              echo "deployment for now is done in appveyor"
-#       - run:
-#           name: install twine
-#           command: |
-#              pip install twine
-#       - attach_workspace:
-#           at: deploy
-#       - run:
-#           name: deploy to repo
-#           command: |
-#             cd deploy
-#             # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
-#             # should be defined as CirceCI project environment variables
-#             twine upload --skip-existing dist/*
+      - run:
+          name: install twine
+          command: |
+             pip install twine
+      - attach_workspace:
+          at: deploy
+      - run:
+          name: deploy to repo
+          command: |
+            cd deploy
+            # TWINE_REPOSITORY and TWINE_USERNAME and TWINE_PASSWORD
+            # should be defined as CirceCI project environment variables
+            twine upload --skip-existing dist/*
 
 workflows:
   version: 2
-  build:
-    jobs:
-      - gcc
-      - clang
-      - debug
-
-  static-analysis:
-    jobs:
-      - cppcheck
-      - scan-build
-
-  python:
-    jobs:
-      - python-35
-      - python-36
-      - python-37
-      - python-38
+#   build:
+#     jobs:
+#       - gcc
+#       - clang
+#       - debug
+# 
+#   static-analysis:
+#     jobs:
+#       - cppcheck
+#       - scan-build
+# 
+#   python:
+#     jobs:
+#       - python-35
+#       - python-36
+#       - python-37
+#       - python-38
 
   windows:
     jobs:
