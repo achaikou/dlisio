@@ -5,6 +5,7 @@ setuptools
 setuptools_scm
 pytest
 pytest-runner
+pytest-benchmark
 pybind11
 hypothesis
 sphinx
