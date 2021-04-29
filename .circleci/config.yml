@@ -507,61 +507,61 @@ jobs:
 
 workflows:
   version: 2
-  build:
-    jobs:
-      - gcc
-      - clang
-      - debug
-
-  static-analysis:
-    jobs:
-      - cppcheck
-      - scan-build
+#   build:
+#     jobs:
+#       - gcc
+#       - clang
+#       - debug
+# 
+#   static-analysis:
+#     jobs:
+#       - cppcheck
+#       - scan-build
 
   dynamic-analysis:
     jobs:
-      - valgrind
+#       - valgrind
       - performance
 
-  python:
-    jobs:
-      - python-36
-      - python-37
-      - python-38
-      - python-39
-
-  windows:
-    jobs:
-      - windows_build:
-          name: build-python-<< matrix.python >>-win-<< matrix.platform >>
-          matrix:
-            parameters:
-              python: ["3.6", "3.7", "3.8", "3.9"]
-              platform: ["x86", "x64"]
-          # filters on the "build" jobs are not accidental, CircleCI needs them
-          filters:
-            tags:
-              only: /.*/
-      - deploy:
-          name: deploy-python-<< matrix.python >>-win-<< matrix.platform >>
-          matrix:
-            parameters:
-              python: ["3.6", "3.7", "3.8", "3.9"]
-              platform: ["x86", "x64"]
-          requires:
-            - build-python-<< matrix.python >>-win-<< matrix.platform >>
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - windows_build:
-          name: debug-build-python-<< matrix.python >>-win-<< matrix.platform >>
-          matrix:
-            parameters:
-              python: ["3.8"]
-              platform: ["x86", "x64"]
-              build_type: ["Debug"]
-  arch:
-    jobs:
-      - bigendian
+#   python:
+#     jobs:
+#       - python-36
+#       - python-37
+#       - python-38
+#       - python-39
+# 
+#   windows:
+#     jobs:
+#       - windows_build:
+#           name: build-python-<< matrix.python >>-win-<< matrix.platform >>
+#           matrix:
+#             parameters:
+#               python: ["3.6", "3.7", "3.8", "3.9"]
+#               platform: ["x86", "x64"]
+#           # filters on the "build" jobs are not accidental, CircleCI needs them
+#           filters:
+#             tags:
+#               only: /.*/
+#       - deploy:
+#           name: deploy-python-<< matrix.python >>-win-<< matrix.platform >>
+#           matrix:
+#             parameters:
+#               python: ["3.6", "3.7", "3.8", "3.9"]
+#               platform: ["x86", "x64"]
+#           requires:
+#             - build-python-<< matrix.python >>-win-<< matrix.platform >>
+#           filters:
+#             tags:
+#               only: /^v.*/
+#             branches:
+#               ignore: /.*/
+#       - windows_build:
+#           name: debug-build-python-<< matrix.python >>-win-<< matrix.platform >>
+#           matrix:
+#             parameters:
+#               python: ["3.8"]
+#               platform: ["x86", "x64"]
+#               build_type: ["Debug"]
+#   arch:
+#     jobs:
+#       - bigendian
