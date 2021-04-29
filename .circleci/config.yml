@@ -230,6 +230,17 @@ jobs:
     steps:
       - python_build
 
+  performance:
+     docker:
+      - image: circleci/python:3.8
+    steps:
+      - python_build
+      - run:
+          name: run performance tests
+          command: |
+            cd python
+            python -m pytest tests/dlis/test_performance.py -s --benchmark-only --benchmark-min-rounds=10 --benchmark-sort='name' --benchmark-columns='mean,min,max,stddev,rounds'
+
   windows_build:
     executor:
       name: win/default
@@ -510,6 +521,7 @@ workflows:
   dynamic-analysis:
     jobs:
       - valgrind
+      - performance
 
   python:
     jobs:
