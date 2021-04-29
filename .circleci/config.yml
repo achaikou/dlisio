@@ -231,7 +231,7 @@ jobs:
       - python_build
 
   performance:
-     docker:
+    docker:
       - image: circleci/python:3.8
     steps:
       - python_build
