@@ -28,11 +28,11 @@ def get_long_description():
         return f.read()
 
 skbuild.setup(
-    name = 'dlisio',
+    name = 'test-ignore-eqdlis',
     description = 'Python library for working with the well log formats DLIS (RP66v1) and LIS79',
     long_description =get_long_description(),
     long_description_content_type = "text/markdown",
-    url = 'https://github.com/equinor/dlisio',
+    url = 'https://github.com/achaikou/dlisio',
     packages = ['dlisio', 'dlisio.dlis', 'dlisio.lis', 'dlisio.common', 'dlisio.dlis.utils'],
     license = 'LGPL-3.0',
     platforms = 'any',

@@ -1,10 +1,7 @@
 name: Build and test wheels
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+  push
 
 jobs:
   wheels:
@@ -12,19 +9,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macOS-10.15]
+        os: [macOS-10.15]
         arch: [auto]
-        include:
-          - os: windows-2019
-            cibw-arch: AMD64
-            cmake_generator: "Visual Studio 16 2019"
-            cmake_generator_platform: "x64"
-          - os: windows-2019
-            cibw-arch: x86
-            cmake_generator: "Visual Studio 16 2019"
-            cmake_generator_platform: "Win32"
-          - os: ubuntu-20.04
-            arch: aarch64
 
     steps:
       - name: Disable autocrlf
@@ -69,7 +55,6 @@ jobs:
     needs: wheels
     name: Publish wheels to PyPI
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     steps:
       - uses: actions/checkout@v2
 
@@ -79,6 +64,7 @@ jobs:
 
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          repository_url: https://test.pypi.org/legacy/
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
           packages_dir: artifact
