@@ -37,7 +37,7 @@ jobs:
         run: |
             git config --global core.autocrlf false
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Used to host cibuildwheel
       - uses: actions/setup-python@v2
