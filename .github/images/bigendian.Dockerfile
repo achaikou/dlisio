@@ -26,7 +26,7 @@ WORKDIR /home/ci/dlisio_requirements
 RUN python3 -m venv venv
 RUN . venv/bin/activate
 RUN /home/ci/dlisio_requirements/venv/bin/python -m pip install --upgrade pip
-RUN /home/ci/dlisio_requirements/venv/bin/python -m pip install --user -r python/requirements-dev.txt
+RUN /home/ci/dlisio_requirements/venv/bin/python -m pip install -r python/requirements-dev.txt
 
 #lfp
 WORKDIR /home/ci
