@@ -16,8 +16,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         id: buildx
@@ -29,5 +29,5 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: .github/images/bigendian.Dockerfile
-          platforms: linux/s390x
+          #platforms: linux/s390x
 

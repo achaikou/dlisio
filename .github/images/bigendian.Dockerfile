@@ -1,4 +1,5 @@
-FROM s390x/debian
+#FROM s390x/debian
+FROM debian
 RUN apt-get update
 RUN apt-get install -y cmake g++ python3 python3-pip git python3-venv
 
