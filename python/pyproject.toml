@@ -99,6 +99,7 @@ manylinux-x86_64-image = "manylinux2010"
 [[tool.cibuildwheel.overrides]]
 select = "cp3{9,10,11}*i686"
 before-build= [
+    "yum -y install epel-release",
     "yum -y install openblas-devel",
     """cmake                                 \
         -S .                                 \
