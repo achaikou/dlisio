@@ -99,7 +99,7 @@ manylinux-x86_64-image = "manylinux2010"
 [[tool.cibuildwheel.overrides]]
 select = "cp3{9,10,11}*i686"
 before-build= [
-    "pip install numpy -C-Dallow-noblas=true",
+    "python -m pip install numpy --config-settings=setup-args="-Dallow-noblas=true" ",
     """cmake                                 \
         -S .                                 \
         -B build                             \
