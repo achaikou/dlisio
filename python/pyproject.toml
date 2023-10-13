@@ -9,7 +9,6 @@ requires = [
 
 [tool.cibuildwheel]
 before-all = [
-    "yum install gcc",
     """curl                                                             \
         -L https://github.com/fmtlib/fmt/archive/refs/tags/7.1.3.tar.gz \
         -o fmt-7.1.3.tar.gz                                             \
@@ -91,11 +90,11 @@ test-command = [
 ]
 
 [tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux2010"
+manylinux-x86_64-image = "manylinux2014"
 
 [[tool.cibuildwheel.overrides]]
-select = "cp311*"
-manylinux-x86_64-image = "manylinux2014"
+select = "cp36*"
+manylinux-x86_64-image = "manylinux2010"
 
 [tool.cibuildwheel.macos]
 environment = { CXXFLAGS="-L/usr/local/lib" }
