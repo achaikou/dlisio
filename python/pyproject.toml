@@ -97,7 +97,7 @@ select = "cp36*"
 manylinux-x86_64-image = "manylinux2010"
 
 [[tool.cibuildwheel.overrides]]
-select = "*i686"
+select = "cp3{9,10,11}*i686"
 before-build= [
     "pip install numpy -C-Dallow-noblas=true",
     """cmake                                 \
