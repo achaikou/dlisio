@@ -9,6 +9,7 @@ requires = [
 
 [tool.cibuildwheel]
 before-all = [
+    "yum install gcc",
     """curl                                                             \
         -L https://github.com/fmtlib/fmt/archive/refs/tags/7.1.3.tar.gz \
         -o fmt-7.1.3.tar.gz                                             \
