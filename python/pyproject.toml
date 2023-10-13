@@ -96,5 +96,25 @@ manylinux-x86_64-image = "manylinux2014"
 select = "cp36*"
 manylinux-x86_64-image = "manylinux2010"
 
+[[tool.cibuildwheel.overrides]]
+select = "*i686"
+before-build= [
+    "pip install numpy -C-Dallow-noblas=true",
+    """cmake                                 \
+        -S .                                 \
+        -B build                             \
+        -DCMAKE_BUILD_TYPE=Release           \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DBUILD_TESTING=OFF                  \
+        -DBUILD_PYTHON=OFF                   \
+    """,
+    """cmake             \
+        --build build    \
+        --parallel       \
+        --target install \
+        --config Release \
+    """,
+]
+
 [tool.cibuildwheel.macos]
 environment = { CXXFLAGS="-L/usr/local/lib" }
