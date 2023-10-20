@@ -4,7 +4,7 @@ from . import lis
 from . import dlis
 
 try:
-    import pkg_resources
-    __version__ = pkg_resources.get_distribution(__name__).version
-except pkg_resources.DistributionNotFound:
+    import importlib
+    __version__ = importlib.metadata.version(__name__)
+except importlib.PackageNotFoundError:  #check that is the correct error by spoiling something
     pass
