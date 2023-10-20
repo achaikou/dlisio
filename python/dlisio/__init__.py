@@ -6,5 +6,5 @@ from . import dlis
 try:
     import importlib
     __version__ = importlib.metadata.version(__name__)
-except importlib.PackageNotFoundError:  #check that is the correct error by spoiling something
+except importlib.metadata.PackageNotFoundError:  #check that is the correct error by spoiling something
     pass
