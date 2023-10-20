@@ -32,6 +32,8 @@ jobs:
             arch: i686
           - os: macos-11
             arch: x86_64
+          - os: macos-13-xlarge
+            arch: arm64
 
     steps:
       - name: Disable autocrlf
