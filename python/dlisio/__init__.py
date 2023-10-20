@@ -3,8 +3,18 @@ from . import common
 from . import lis
 from . import dlis
 
-try:
-    import importlib
-    __version__ = importlib.metadata.version(__name__)
-except importlib.metadata.PackageNotFoundError:  #check that is the correct error by spoiling something
-    pass
+import sys
+
+# remove else once support for python 3.7 is over
+if sys.version_info >= (3, 8):
+    try:
+        import importlib
+        __version__ = importlib.metadata.version(__name__)
+    except importlib.metadata.PackageNotFoundError:  #check that is the correct error by spoiling something
+        pass
+else:
+    try:
+       import pkg_resources
+       __version__ = pkg_resources.get_distribution(__name__).version
+    except pkg_resources.DistributionNotFound:
+        pass
