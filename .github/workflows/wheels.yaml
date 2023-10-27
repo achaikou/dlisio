@@ -64,7 +64,7 @@ jobs:
 
           CIBW_ARCHS: ${{ matrix.arch }}
           # musllinux skip: unlikely someone wants to run dlisio on alpine on non-standard architecture
-          CIBW_SKIP: pp* *-musllinux_i686 *-musllinux_aarch64 cp36-* cp31*-win32
+          CIBW_SKIP: pp* *-musllinux_i686 *-musllinux_aarch64 cp36-*
 
         run: |
             python -m cibuildwheel --output-dir wheelhouse python/
