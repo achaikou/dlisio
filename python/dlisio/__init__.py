@@ -8,7 +8,7 @@ import sys
 # remove else once support for python 3.7 is over
 if sys.version_info >= (3, 8):
     try:
-        import importlib
+        import importlib.metadata
         __version__ = importlib.metadata.version(__name__)
     except importlib.metadata.PackageNotFoundError:
         pass
