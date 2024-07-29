@@ -40,7 +40,6 @@ skbuild.setup(
                       'pybind11 >= 2.3',
                       'setuptools_scm',
     ],
-    tests_require = ['pytest'],
     # we're building with the pybind11 fetched from pip. Since we don't rely on
     # a cmake-installed pybind there's also no find_package(pybind11) -
     # instead, the get include dirs from the package and give directly from

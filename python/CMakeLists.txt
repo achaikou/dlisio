@@ -1,4 +1,5 @@
 if (SKBUILD)
+    # TODO: check when this path is called
     # invoked as a part of scikit-build, so this is just a proxy for the python
     # extension cmake. this works around the fundamental limitation in cmake
     # that it looks only for directories with a CMakeLists.txt in it, not for a
