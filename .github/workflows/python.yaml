@@ -38,13 +38,13 @@ jobs:
         with:
           python-version: '3.11'
 
-    # python -m pip install --upgrade setuptools
       - name: Create python venv
         shell: bash
         run: |
           python -m venv venv
           . ./venv/bin/activate
           python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
           python -m pip install -r python/requirements-dev.txt
           which python
 
