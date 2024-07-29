@@ -1,0 +1,68 @@
+name: Build and test python
+# Perform the same build as is advised in our docs
+# this is not the same as other workflows
+# - core.yaml builds with python turned off
+# - wheels.yaml build cpp core separately and then build wheels, ignoring the cmake/setup files. Right?
+# - docs seems to be using build system, but no tests
+# - big endian is the one also performing tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build_core:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Elevate privileges
+        run: |
+          echo "PRIVLEDGES=sudo" >> $GITHUB_ENV
+
+      - uses: './.github/actions/build_core_dependencies'
+        with:
+          privileges: $PRIVLEDGES
+
+    # whichever python is there it is good enough
+      - name: Create python venv
+        shell: bash
+        run: |
+          python -m venv venv
+          . ./venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
+          python -m pip install -r python/requirements-dev.txt
+          which python
+
+      - name: Configure dlisio
+        shell: bash
+        run: |
+          . ./venv/bin/activate
+          cmake -S . -B build                     \
+            -DCMAKE_BUILD_TYPE=Release            \
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON  \
+            -DBUILD_PYTHON=ON
+
+      - name: Build dlisio
+        shell: bash
+        run: |
+          $PRIVLEDGES cmake   \
+            --build build     \
+            --parallel        \
+            --config Release
+
+      - name: Test dlisio
+        shell: bash
+        run: |
+          cd build
+          ctest -C Release --output-on-failure --verbose
