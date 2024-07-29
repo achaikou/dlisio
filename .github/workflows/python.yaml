@@ -33,7 +33,10 @@ jobs:
         with:
           privileges: $PRIVLEDGES
 
-    # whichever python is there it is good enough
+    # newer python?
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
     # python -m pip install --upgrade setuptools
       - name: Create python venv
