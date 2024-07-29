@@ -16,24 +16,24 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-2019
-            arch: AMD64
-            cmake_generator: "Visual Studio 16 2019"
-            cmake_generator_platform: "x64"
-          - os: windows-2019
-            arch: x86
-            cmake_generator: "Visual Studio 16 2019"
-            cmake_generator_platform: "Win32"
+          # - os: windows-2019
+          #   arch: AMD64
+          #   cmake_generator: "Visual Studio 16 2019"
+          #   cmake_generator_platform: "x64"
+          # - os: windows-2019
+          #   arch: x86
+          #   cmake_generator: "Visual Studio 16 2019"
+          #   cmake_generator_platform: "Win32"
           - os: ubuntu-20.04
             arch: x86_64
-          - os: ubuntu-20.04
-            arch: aarch64
-          - os: ubuntu-20.04
-            arch: i686 #builds from cibuildwheel, qemu not needed
-          - os: macos-13
-            arch: x86_64
-          - os: macos-14
-            arch: arm64
+          # - os: ubuntu-20.04
+          #   arch: aarch64
+          # - os: ubuntu-20.04
+          #   arch: i686 #builds from cibuildwheel, qemu not needed
+          # - os: macos-13
+          #   arch: x86_64
+          # - os: macos-14
+          #   arch: arm64
 
     steps:
       - name: Disable autocrlf
