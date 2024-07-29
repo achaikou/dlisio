@@ -240,7 +240,7 @@ lis::prheader iodevice::read_physical_header() noexcept (false) {
 
     if ( head.length < mvl ) {
         std::string where = "iodevice::read_physical_header: ";
-        std::string what  = "Too short record length (was {} bytes)";
+        std::string what  = "Too! short record length (was {} bytes)";
         throw std::runtime_error(where + fmt::format(what, head.length));
     }
 
