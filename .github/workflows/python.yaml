@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_core:
+  build_python:
     runs-on: ${{ matrix.os }}
 
     strategy:
