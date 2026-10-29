@@ -534,7 +534,11 @@ noexcept (false) {
     auto resize = [&](std::size_t n) {
         info = py::buffer_info {};
         dstb = py::buffer {};
-        dstobj.attr("resize")(n);
+        /* From python 3.14 numpy raises ValueError "cannot resize an array that
+         * may be referenced by another object" despite all the precautions
+         * taken. Assume this is a false-positive and disable refcheck.
+         */
+        dstobj.attr("resize")(n, "refcheck"_a = false);
         allocated_rows = n;
         dstb = py::buffer(dstobj);
         info = dstb.request(true);
